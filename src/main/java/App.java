@@ -1,16 +1,24 @@
 
 
+import javax.transaction.Transaction;
 import java.sql.*;
+//CRUD - create, retrieve, update, delete
 
-/**
- *
- * @author postgresqltutorial.com
- */
+
 public class App{
 
     private final String url = "jdbc:postgresql://localhost/livedata";
     private final String user = "danielhill";
     private final String password = "";
+
+    /*
+TODO CREATE A TRANSACTION AND EXECUTE IT
+ */
+//    private final Transaction transaction;
+
+//    public App() {
+//        transaction = new Transaction();
+//    }
 
     /**
      * Connect to the PostgreSQL database
@@ -78,7 +86,27 @@ public class App{
         }
     }
 
-    public static void viewTable2(Connection con) throws SQLException {
+
+    public static void create(Connection con) throws SQLException {
+
+        String query = "CREATE TABLE Persons (\n" +
+                "    PersonID int,\n" +
+                "    LastName varchar(255),\n" +
+                "    FirstName varchar(255),\n" +
+                "    Address varchar(255),\n" +
+                "    City varchar(255) \n" +
+                ");";
+        try (Statement stmt = con.createStatement()) {
+
+            stmt.executeQuery(query);
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+    }
+
+    public static void retrieve(Connection con) throws SQLException {
 
         String query = "Select * from company";
         try (Statement stmt = con.createStatement()) {
@@ -98,8 +126,42 @@ public class App{
         }
 
     }
+//    put in valid data for column in database
+
+//    public static void update(Connection con) throws SQLException {
+//
+//        String query = "UPDATE Customers" +
+//        "SET ContactName = 'Alfred Schmidt'";
+//        try (Statement stmt = con.createStatement()) {
+//
+//            ResultSet rs = stmt.executeQuery(query);
+//
+//            while (rs.next()) {
+//                String salary = rs.getString("salary");
+//               /* int supplierID = rs.getInt("SUP_ID");
+//                float price = rs.getFloat("PRICE");
+//                int sales = rs.getInt("SALES");
+//                int total = rs.getInt("TOTAL");*/
+//                System.out.println(salary);
+//            }
+//        } catch (SQLException e) {
+//            System.out.println(e);
+//        }
+//
+//    }
+
+    public static void delete(Connection con) throws SQLException {
 
 
+        String query = "DROP TABLE Persons";
+        try (Statement stmt = con.createStatement()) {
+
+            stmt.executeQuery(query);
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 
 
     /**
@@ -107,7 +169,7 @@ public class App{
      */
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
-        String url = "jdbc:postgresql://localhost:5431/";
+        String url = "jdbc:postgresql://localhost:5435/";
         String user = "danielhill";
         String password = "";
 
@@ -116,7 +178,11 @@ public class App{
         conn = DriverManager.getConnection(url, user, password);
 
         App app = new App();
-        app.viewTable2(conn);
-        app.viewTable2(conn);
+
+        app.create(conn);
+        app.retrieve(conn);
+        //app.update(conn);
+        app.delete(conn);
+
     }
 }
